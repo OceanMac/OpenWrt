@@ -25,20 +25,20 @@ jobs:
     steps:
 
     - name: Detect Latest Branch & Get Commit Hash
-        id: getHash
-        run: |
-          LATEST_BRANCH=$(git ls-remote --heads "$REPO_URL" \
-            | awk -F'refs/heads/' '{print $2}' \
-            | grep -E '^openwrt-[0-9]+\.[0-9]+' \
-            | sort -V \
-            | tail -n 1)
+      id: getHash
+      run: |
+        LATEST_BRANCH=$(git ls-remote --heads "$REPO_URL" \
+          | awk -F'refs/heads/' '{print $2}' \
+          | grep -E '^openwrt-[0-9]+\.[0-9]+' \
+          | sort -V \
+          | tail -n 1)
 
-          REPO_BRANCH="${LATEST_BRANCH:-openwrt-25.12}"
-          echo "REPO_BRANCH=$REPO_BRANCH" >> "$GITHUB_ENV"
-          echo "Using branch: $REPO_BRANCH"
+        REPO_BRANCH="${LATEST_BRANCH:-openwrt-25.12}"
+        echo "REPO_BRANCH=$REPO_BRANCH" >> "$GITHUB_ENV"
+        echo "Using branch: $REPO_BRANCH"
 
-          git clone --depth 1 "$REPO_URL" -b "$REPO_BRANCH" .
-          echo "commitHash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+        git clone --depth 1 "$REPO_URL" -b "$REPO_BRANCH" .
+        echo "commitHash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
     - name: Compare Commit Hash
       id: cacheHash
